@@ -1,0 +1,2 @@
+module Geckoboard
+end
