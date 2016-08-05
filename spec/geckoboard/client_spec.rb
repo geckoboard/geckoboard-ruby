@@ -31,6 +31,11 @@ module Geckoboard
         expect { subject.ping }.to raise_error(UnauthorizedError, error_message)
       end
 
+      specify 'raises UnexpectedStatusError when the server response with an unexpected status code' do
+        stub_endpoint.to_return(status: 418)
+        expect { subject.ping }.to raise_error(UnexpectedStatusError, 'Server responded with unexpected status code (418)')
+      end
+
       def stub_endpoint
         stub_request(:get, 'https://api.geckoboard.com/')
           .with(basic_auth: [api_key, ''])

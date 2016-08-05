@@ -15,11 +15,14 @@ module Geckoboard
 
       response = http.request(request)
 
-      if response.is_a? Net::HTTPUnauthorized
+      case response
+      when Net::HTTPOK
+        true
+      when Net::HTTPUnauthorized
         raise UnauthorizedError, extract_error_message(response)
+      else
+        raise UnexpectedStatusError, "Server responded with unexpected status code (#{response.code})"
       end
-
-      true
     end
 
     private
