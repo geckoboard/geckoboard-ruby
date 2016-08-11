@@ -24,16 +24,25 @@ module Geckoboard
       when Net::HTTPUnauthorized
         raise UnauthorizedError, extract_error_message(response)
       else
-        raise UnexpectedStatusError, "Server responded with unexpected status code (#{response.code})"
+        error_message = extract_error_message(response) ||
+          "Server responded with unexpected status code (#{response.code})"
+
+        raise UnexpectedStatusError, error_message
       end
     end
 
     private
 
     def extract_error_message(response)
+      return unless response_is_json? response
+
       JSON.parse(response.body)
         .fetch('error', {})
         .fetch('message', nil)
+    end
+
+    def response_is_json?(response)
+      response['Content-Type'] == 'application/json'
     end
   end
 end

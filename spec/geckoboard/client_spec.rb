@@ -10,6 +10,9 @@ module Geckoboard
       specify 'returns true when server responds with 200' do
         stub_endpoint.to_return(
           status: 200,
+          headers: {
+            'Content-Type' => 'application/json'
+          },
           body: '{}'
         )
 
@@ -21,6 +24,9 @@ module Geckoboard
 
         stub_endpoint.to_return(
           status: 401,
+          headers: {
+            'Content-Type' => 'application/json'
+          },
           body: {
             error: {
               message: error_message
