@@ -1,5 +1,7 @@
 module Geckoboard
   class Client
+    USER_AGENT = "Geckoboard Ruby Client #{VERSION}"
+
     attr_reader :api_key
 
     def initialize(api_key)
@@ -12,6 +14,7 @@ module Geckoboard
 
       request = Net::HTTP::Get.new('/')
       request.basic_auth(api_key, '')
+      request['User-Agent'] = USER_AGENT
 
       response = http.request(request)
 

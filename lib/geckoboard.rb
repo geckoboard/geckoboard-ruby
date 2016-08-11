@@ -1,6 +1,7 @@
 require 'net/http'
 require 'json'
 
+require 'geckoboard/version'
 require 'geckoboard/client'
 require 'geckoboard/errors'
 

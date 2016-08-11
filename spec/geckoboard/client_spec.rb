@@ -38,7 +38,7 @@ module Geckoboard
 
       def stub_endpoint
         stub_request(:get, 'https://api.geckoboard.com/')
-          .with(basic_auth: [api_key, ''])
+          .with(basic_auth: [api_key, ''], headers: { 'User-Agent' => Client::USER_AGENT })
       end
     end
   end
