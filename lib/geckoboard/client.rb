@@ -1,6 +1,6 @@
 module Geckoboard
   class Client
-    USER_AGENT = "Geckoboard Ruby Client #{VERSION}"
+    USER_AGENT = "Geckoboard-Ruby/#{VERSION}"
 
     attr_reader :api_key
 
