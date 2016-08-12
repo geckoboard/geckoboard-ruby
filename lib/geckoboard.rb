@@ -7,6 +7,7 @@ require 'geckoboard/connection'
 require 'geckoboard/client'
 require 'geckoboard/datasets_client'
 require 'geckoboard/dataset'
+require 'geckoboard/payload_formatter'
 require 'geckoboard/errors'
 
 module Geckoboard

@@ -9,7 +9,7 @@ module Geckoboard
 
         expect(client).to receive(:delete).with(dataset_id)
 
-        dataset = Dataset.new(client, dataset_id)
+        dataset = Dataset.new(client, dataset_id, {})
         dataset.delete
       end
     end
