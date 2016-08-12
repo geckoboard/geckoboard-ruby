@@ -114,6 +114,34 @@ module Geckoboard
             })
         end
       end
+
+      describe '#delete' do
+        include_examples :bad_response_exceptions
+
+        specify 'returns true when server responds with 200' do
+          stub_endpoint.to_return(
+            status: 200,
+            headers: {
+              'Content-Type' => 'application/json'
+            },
+            body: '{}'
+          )
+
+          expect(make_request).to eq(true)
+        end
+
+        def make_request
+          subject.datasets.delete('sales.gross')
+        end
+
+        def stub_endpoint
+          stub_request(:delete, 'https://api.geckoboard.com/datasets/sales.gross')
+            .with({
+              basic_auth: [api_key, ''],
+              headers: { 'User-Agent' => USER_AGENT }
+            })
+        end
+      end
     end
   end
 end

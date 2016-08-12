@@ -12,6 +12,12 @@ module Geckoboard
       Dataset.new(JSON.parse(response.body).fetch('id'))
     end
 
+    def delete(dataset_id)
+      path = dataset_path(dataset_id)
+      connection.delete(path)
+      true
+    end
+
     private
 
     def dataset_path(dataset_id)
