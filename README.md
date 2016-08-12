@@ -48,6 +48,20 @@ dataset = client.datasets.find_or_create('sales.gross', fields: {
 })
 ```
 
+### Delete
+
+Delete a dataset and all data therein.
+
+```ruby
+dataset.delete # => true
+```
+
+Delete a dataset with a given id.
+
+```ruby
+client.datasets.delete('sales.gross') # => true
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.

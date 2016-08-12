@@ -12,6 +12,12 @@ module Geckoboard
       make_request(request)
     end
 
+    def delete(path)
+      request = Net::HTTP::Delete.new(path)
+
+      make_request(request)
+    end
+
     def put(path, body)
       request = Net::HTTP::Put.new(path)
       request['Content-Type'] = 'application/json'
