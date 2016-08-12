@@ -9,12 +9,20 @@ module Geckoboard
     def find_or_create(dataset_id, fields: fields)
       path = dataset_path(dataset_id)
       response = connection.put(path, { fields: fields }.to_json)
-      Dataset.new(self, JSON.parse(response.body).fetch('id'))
+
+      data = JSON.parse(response.body)
+      Dataset.new(self, data.fetch('id'), data.fetch('fields'))
     end
 
     def delete(dataset_id)
       path = dataset_path(dataset_id)
       connection.delete(path)
+      true
+    end
+
+    def put_data(dataset_id, data)
+      path = "#{dataset_path(dataset_id)}/data"
+      connection.put(path, { data: data }.to_json)
       true
     end
 

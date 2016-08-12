@@ -62,6 +62,23 @@ Delete a dataset with a given id.
 client.datasets.delete('sales.gross') # => true
 ```
 
+### Put
+
+Replace all data in the dataset.
+
+```ruby
+dataset.put([
+  {
+    timestamp: DateTime.new(2016, 1, 2, 12, 0, 0),
+    amount: 409
+  },
+  {
+    timestamp: DateTime.new(2016, 1, 3, 12, 0, 0),
+    amount: 164
+  },
+])
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `bin/console` for an interactive prompt that will allow you to experiment.
