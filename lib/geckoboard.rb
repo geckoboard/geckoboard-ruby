@@ -5,7 +5,7 @@ require 'cgi'
 require 'geckoboard/version'
 require 'geckoboard/connection'
 require 'geckoboard/client'
-require 'geckoboard/datasets'
+require 'geckoboard/datasets_client'
 require 'geckoboard/dataset'
 require 'geckoboard/errors'
 

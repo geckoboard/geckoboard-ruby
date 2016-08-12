@@ -1,5 +1,5 @@
 module Geckoboard
-  class Datasets
+  class DatasetsClient
     attr_reader :connection
 
     def initialize(connection)

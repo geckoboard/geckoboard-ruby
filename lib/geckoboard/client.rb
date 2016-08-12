@@ -12,7 +12,7 @@ module Geckoboard
     end
 
     def datasets
-      Datasets.new(connection)
+      DatasetsClient.new(connection)
     end
   end
 end
