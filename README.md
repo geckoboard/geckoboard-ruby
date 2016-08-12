@@ -22,13 +22,30 @@ Or install it yourself as:
 
 ## Usage
 
-### Pinging to authenticate
+### Ping to authenticate
 
 Verify that your API key is valid and that you can reach the Geckoboard API.
 
 ```ruby
 client = Geckoboard.client('222efc82e7933138077b1c2554439e15')
-client.ping
+client.ping # => true
+```
+
+### Find or create
+
+Verify an existing dataset or create a new one.
+
+```ruby
+dataset = client.datasets.find_or_create('sales.gross', fields: {
+  amount: {
+    type: :number,
+    name: 'Amount',
+  },
+  timestamp: {
+    type: :datetime,
+    name: 'Time'
+  }
+})
 ```
 
 ## Development

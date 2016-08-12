@@ -6,20 +6,8 @@ module Geckoboard
 
     subject { Client.new(api_key) }
 
-    describe '#ping' do
-      specify 'returns true when server responds with 200' do
-        stub_endpoint.to_return(
-          status: 200,
-          headers: {
-            'Content-Type' => 'application/json'
-          },
-          body: '{}'
-        )
-
-        expect(subject.ping).to eq(true)
-      end
-
-      specify 'raises UnauthorizedError when the server responds with 401' do
+    shared_examples :bad_response_exceptions do
+      specify 'raises UnauthorizedError when the server responds with a 401' do
         error_message = 'Your API key is invalid'
 
         stub_endpoint.to_return(
@@ -34,17 +22,97 @@ module Geckoboard
           }.to_json
         )
 
-        expect { subject.ping }.to raise_error(UnauthorizedError, error_message)
+        expect { make_request }.to raise_error(UnauthorizedError, error_message)
+      end
+
+      specify 'raises BadRequestError when the server responds with a 400' do
+        stub_endpoint.to_return(status: 400)
+        expect { make_request }.to raise_error(BadRequestError)
+      end
+
+      specify 'raises ConflictError when the server responds with a 409' do
+        stub_endpoint.to_return(status: 409)
+        expect { make_request }.to raise_error(ConflictError)
       end
 
       specify 'raises UnexpectedStatusError when the server responds with an unexpected status code' do
         stub_endpoint.to_return(status: 418)
-        expect { subject.ping }.to raise_error(UnexpectedStatusError, 'Server responded with unexpected status code (418)')
+        expect { make_request }.to raise_error(UnexpectedStatusError, 'Server responded with unexpected status code (418)')
+      end
+    end
+
+    describe '#ping' do
+      include_examples :bad_response_exceptions
+
+      specify 'returns true when server responds with 200' do
+        stub_endpoint.to_return(
+          status: 200,
+          headers: {
+            'Content-Type' => 'application/json'
+          },
+          body: '{}'
+        )
+
+        expect(make_request).to eq(true)
+      end
+
+      def make_request
+        subject.ping
       end
 
       def stub_endpoint
         stub_request(:get, 'https://api.geckoboard.com/')
-          .with(basic_auth: [api_key, ''], headers: { 'User-Agent' => Client::USER_AGENT })
+          .with(basic_auth: [api_key, ''], headers: { 'User-Agent' => USER_AGENT })
+      end
+    end
+
+    describe '#datasets' do
+      describe '#find_or_create' do
+        include_examples :bad_response_exceptions
+
+        let(:fields) do
+          {
+            amount: {
+              type: :number,
+              name: 'Amount'
+            },
+            timestamp: {
+              type: :datetime,
+              name: 'Time'
+            }
+          }
+        end
+
+        specify 'returns the found or created Dataset object' do
+          stub_endpoint.to_return(
+            status: 201,
+            headers: {
+              'Content-Type' => 'application/json'
+            },
+            body: {
+              id: 'sales.gross',
+              fields: fields
+            }.to_json
+          )
+          dataset = make_request
+          expect(dataset.id).to eq('sales.gross')
+        end
+
+        def make_request
+          subject.datasets.find_or_create('sales.gross', fields: fields)
+        end
+
+        def stub_endpoint
+          stub_request(:put, 'https://api.geckoboard.com/datasets/sales.gross')
+            .with({
+              body: { fields: fields }.to_json,
+              basic_auth: [api_key, ''],
+              headers: {
+                'User-Agent' => USER_AGENT,
+                'Content-Type' => 'application/json'
+              }
+            })
+        end
       end
     end
   end
