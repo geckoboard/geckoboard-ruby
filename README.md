@@ -48,7 +48,7 @@ dataset = client.datasets.find_or_create('sales.gross', fields: {
 })
 ```
 
-### Delete
+### Delete
 
 Delete a dataset and all data therein.
 
