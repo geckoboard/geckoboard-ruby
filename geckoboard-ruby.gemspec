@@ -9,9 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ['Daniel Upton']
   spec.email         = %w[daniel.upton@geckoboard.com]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = %q{Ruby client library for Geckoboard}
+  spec.homepage      = 'https://github.com/geckoboard/geckoboard-ruby'
   spec.license       = 'MIT'
 
   spec.required_ruby_version = '>= 2.0'
