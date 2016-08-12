@@ -6,7 +6,7 @@ module Geckoboard
       @connection = connection
     end
 
-    def find_or_create(dataset_id, fields:)
+    def find_or_create(dataset_id, fields: {})
       path = dataset_path(dataset_id)
       response = connection.put(path, { fields: fields }.to_json)
 
