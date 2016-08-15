@@ -1,7 +1,7 @@
 # geckoboard-ruby
 [![CircleCI](https://circleci.com/gh/geckoboard/geckoboard-ruby.svg?style=svg)](https://circleci.com/gh/geckoboard/geckoboard-ruby)
 
-Ruby client library for Geckoboard (https://developer.geckoboard.com).
+Ruby client library for Geckoboard (https://developer.geckoboard.com/api-reference/ruby).
 
 ## Installation
 
