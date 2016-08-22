@@ -9,14 +9,7 @@ require 'geckoboard/datasets_client'
 require 'geckoboard/dataset'
 require 'geckoboard/payload_formatter'
 require 'geckoboard/errors'
-
-require 'geckoboard/field'
-require 'geckoboard/number'
-require 'geckoboard/date'
-require 'geckoboard/date_time'
-require 'geckoboard/money'
-require 'geckoboard/percentage'
-require 'geckoboard/string'
+require 'geckoboard/field_types'
 
 module Geckoboard
   USER_AGENT = "Geckoboard-Ruby/#{VERSION}"
