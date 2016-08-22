@@ -35,17 +35,20 @@ client.ping # => true
 Verify an existing dataset or create a new one.
 
 ```ruby
-dataset = client.datasets.find_or_create('sales.gross', fields: {
-  amount: {
-    type: :number,
-    name: 'Amount',
-  },
-  timestamp: {
-    type: :datetime,
-    name: 'Time'
-  }
-})
+dataset = client.datasets.find_or_create('sales.gross', fields: [
+  Geckoboard::Money.new(:amount, name: 'Amount', currency: 'USD'),
+  Geckoboard::DateTime.new(:timestamp, name: 'Time'),
+])
 ```
+
+Available field types:
+
+- `Date`
+- `DateTime`
+- `Number`
+- `Percentage`
+- `String`
+- `Money`
 
 ### Delete
 
@@ -69,11 +72,11 @@ Replace all data in the dataset.
 dataset.put([
   {
     timestamp: DateTime.new(2016, 1, 2, 12, 0, 0),
-    amount: 409
+    amount: 40900
   },
   {
     timestamp: DateTime.new(2016, 1, 3, 12, 0, 0),
-    amount: 164
+    amount: 16400
   },
 ])
 ```

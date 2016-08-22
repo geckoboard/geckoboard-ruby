@@ -10,8 +10,8 @@ module Geckoboard
       formatter = PayloadFormatter.new(dataset)
 
       payload = formatter.format([
-        { 'birthday' => Date.new(2016, 1, 1) },
-        { 'birthday' => DateTime.new(2016, 1, 2, 10, 30) },
+        { 'birthday' => ::Date.new(2016, 1, 1) },
+        { 'birthday' => ::DateTime.new(2016, 1, 2, 10, 30) },
         { :birthday  => '2016-01-03' }
       ])
 
@@ -30,8 +30,8 @@ module Geckoboard
       formatter = PayloadFormatter.new(dataset)
 
       payload = formatter.format([
-        { 'moment_of_birth' => Date.new(2016, 1, 1) },
-        { 'moment_of_birth' => DateTime.new(2016, 1, 2, 10, 30, 15, 'CST') },
+        { 'moment_of_birth' => ::Date.new(2016, 1, 1) },
+        { 'moment_of_birth' => ::DateTime.new(2016, 1, 2, 10, 30, 15, 'CST') },
         { :moment_of_birth  => '2016-01-03T00:00:00+00:00' }
       ])
 

@@ -68,44 +68,91 @@ module Geckoboard
 
     describe '#datasets' do
       describe '#find_or_create' do
-        include_examples :bad_response_exceptions
+        context 'with a fields hash' do
+          include_examples :bad_response_exceptions
 
-        let(:fields) do
-          {
-            amount: {
-              type: :number,
-              name: 'Amount'
-            },
-            timestamp: {
-              type: :datetime,
-              name: 'Time'
+          let(:fields_hash) do
+            {
+              amount: {
+                name: 'Amount',
+                type: :number,
+              },
+              timestamp: {
+                name: 'Time',
+                type: :datetime,
+              }
             }
-          }
+          end
+
+          specify 'returns the found or created Dataset object' do
+            stub_endpoint.to_return(
+              status: 201,
+              headers: {
+                'Content-Type' => 'application/json'
+              },
+              body: {
+                id: 'sales.gross',
+                fields: fields_hash
+              }.to_json
+            )
+            dataset = make_request
+            expect(dataset.id).to eq('sales.gross')
+          end
+
+          def make_request
+            subject.datasets.find_or_create('sales.gross', fields: fields_hash)
+          end
         end
 
-        specify 'returns the found or created Dataset object' do
-          stub_endpoint.to_return(
-            status: 201,
-            headers: {
-              'Content-Type' => 'application/json'
-            },
-            body: {
-              id: 'sales.gross',
-              fields: fields
-            }.to_json
-          )
-          dataset = make_request
-          expect(dataset.id).to eq('sales.gross')
-        end
+        context 'with a collection of field objects' do
+          include_examples :bad_response_exceptions
 
-        def make_request
-          subject.datasets.find_or_create('sales.gross', fields: fields)
+          let(:fields_hash) do
+            {
+              amount: {
+                name: 'Amount',
+                type: :number,
+              },
+              timestamp: {
+                name: 'Time',
+                type: :datetime,
+              },
+              cost: {
+                name: 'Cost',
+                type: :money,
+                currency: 'USD',
+              }
+            }
+          end
+
+          specify 'returns the found or created Dataset object' do
+            stub_endpoint.to_return(
+              status: 201,
+              headers: {
+                'Content-Type' => 'application/json'
+              },
+              body: {
+                id: 'sales.gross',
+                fields: fields_hash
+              }.to_json
+            )
+            dataset = make_request
+            expect(dataset.id).to eq('sales.gross')
+          end
+
+          def make_request
+            subject.datasets.find_or_create('sales.gross', fields: [
+              Geckoboard::Number.new(:amount, name: 'Amount'),
+              Geckoboard::DateTime.new(:timestamp, name: 'Time'),
+              Geckoboard::Money.new(:cost, name: 'Cost', currency: 'USD')
+            ])
+          end
         end
 
         def stub_endpoint
           stub_request(:put, 'https://api.geckoboard.com/datasets/sales.gross')
             .with({
-              body: { fields: fields }.to_json,
+              body: { fields: fields_hash }.to_json,
               basic_auth: [api_key, ''],
               headers: {
                 'User-Agent' => USER_AGENT,
