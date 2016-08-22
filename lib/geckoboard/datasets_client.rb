@@ -6,9 +6,9 @@ module Geckoboard
       @connection = connection
     end
 
-    def find_or_create(dataset_id, fields: {})
+    def find_or_create(dataset_id, fields: nil)
       path = dataset_path(dataset_id)
-      response = connection.put(path, { fields: fields }.to_json)
+      response = connection.put(path, { fields: hashify_fields(fields) }.to_json)
 
       data = JSON.parse(response.body)
       Dataset.new(self, data.fetch('id'), data.fetch('fields'))
@@ -30,6 +30,18 @@ module Geckoboard
 
     def dataset_path(dataset_id)
       "/datasets/#{CGI.escape(dataset_id)}"
+    end
+
+    def hashify_fields(fields)
+      return fields if fields.is_a? Hash
+
+      unless fields.respond_to?(:inject) && fields.all? { |field| field.is_a? Field }
+        raise ArgumentError, "`fields:' must be either a hash of field definitions, or collection of `Geckoboard::Field' objects"
+      end
+
+      fields.inject({}) do |hash, field|
+        hash.merge(field.id => field.to_hash)
+      end
     end
   end
 end

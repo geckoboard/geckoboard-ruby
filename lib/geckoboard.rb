@@ -9,6 +9,7 @@ require 'geckoboard/datasets_client'
 require 'geckoboard/dataset'
 require 'geckoboard/payload_formatter'
 require 'geckoboard/errors'
+require 'geckoboard/field_types'
 
 module Geckoboard
   USER_AGENT = "Geckoboard-Ruby/#{VERSION}"
