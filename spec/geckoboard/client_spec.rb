@@ -142,9 +142,9 @@ module Geckoboard
 
           def make_request
             subject.datasets.find_or_create('sales.gross', fields: [
-              Geckoboard::Number.new(:amount, name: 'Amount'),
-              Geckoboard::DateTime.new(:timestamp, name: 'Time'),
-              Geckoboard::Money.new(:cost, name: 'Cost', currency: 'USD')
+              Geckoboard::NumberField.new(:amount, name: 'Amount'),
+              Geckoboard::DateTimeField.new(:timestamp, name: 'Time'),
+              Geckoboard::MoneyField.new(:cost, name: 'Cost', currency: 'USD')
             ])
           end
         end

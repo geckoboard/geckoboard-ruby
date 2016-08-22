@@ -14,31 +14,31 @@ module Geckoboard
     end
   end
 
-  class String < Field
+  class StringField < Field
     def to_hash
       super.merge(type: :string)
     end
   end
 
-  class Number < Field
+  class NumberField < Field
     def to_hash
       super.merge(type: :number)
     end
   end
 
-  class Date < Field
+  class DateField < Field
     def to_hash
       super.merge(type: :date)
     end
   end
 
-  class DateTime < Field
+  class DateTimeField < Field
     def to_hash
       super.merge(type: :datetime)
     end
   end
 
-  class Money < Field
+  class MoneyField < Field
     attr_reader :currency
 
     def initialize(id, name: nil, currency: nil)
@@ -53,7 +53,7 @@ module Geckoboard
     end
   end
 
-  class Percentage < Field
+  class PercentageField < Field
     def to_hash
       super.merge(type: :percentage)
     end

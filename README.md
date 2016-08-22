@@ -36,19 +36,19 @@ Verify an existing dataset or create a new one.
 
 ```ruby
 dataset = client.datasets.find_or_create('sales.gross', fields: [
-  Geckoboard::Money.new(:amount, name: 'Amount', currency: 'USD'),
-  Geckoboard::DateTime.new(:timestamp, name: 'Time'),
+  Geckoboard::MoneyField.new(:amount, name: 'Amount', currency: 'USD'),
+  Geckoboard::DateTimeField.new(:timestamp, name: 'Time'),
 ])
 ```
 
 Available field types:
 
-- `Date`
-- `DateTime`
-- `Number`
-- `Percentage`
-- `String`
-- `Money`
+- `DateField`
+- `DateTimeField`
+- `NumberField`
+- `PercentageField`
+- `StringField`
+- `MoneyField`
 
 ### Delete
 
