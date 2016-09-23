@@ -67,20 +67,20 @@ module Geckoboard
     end
 
     describe '#datasets' do
-      describe '#find_or_create' do
-        let(:fields_hash) do
-          {
-            amount: {
-              name: 'Amount',
-              type: :number,
-            },
-            timestamp: {
-              name: 'Time',
-              type: :datetime,
-            }
+      let(:fields_hash) do
+        {
+          amount: {
+            name: 'Amount',
+            type: :number,
+          },
+          timestamp: {
+            name: 'Time',
+            type: :datetime,
           }
-        end
+        }
+      end
 
+      describe '#find_or_create' do
         let(:request_body) do
           { fields: fields_hash }
         end
@@ -226,19 +226,6 @@ module Geckoboard
       describe '#put' do
         include_examples :bad_response_exceptions
 
-        let(:fields) do
-          {
-            amount: {
-              type: :number,
-              name: 'Amount'
-            },
-            timestamp: {
-              type: :datetime,
-              name: 'Time'
-            }
-          }
-        end
-
         let(:data) do
           [
             {
@@ -273,11 +260,11 @@ module Geckoboard
               },
               body: {
                 id: 'sales.gross',
-                fields: fields
+                fields: fields_hash
               }.to_json
             )
 
-          dataset = subject.datasets.find_or_create('sales.gross', fields: fields)
+          dataset = subject.datasets.find_or_create('sales.gross', fields: fields_hash)
           dataset.put(data)
         end
 
