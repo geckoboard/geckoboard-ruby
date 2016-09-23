@@ -277,6 +277,61 @@ module Geckoboard
             })
         end
       end
+
+      describe '#post' do
+        include_examples :bad_response_exceptions
+
+        let(:data) do
+          [
+            {
+              'timestamp' => '2016-01-01T12:00:00Z',
+              'amount'    => 819
+            },
+            {
+              'timestamp' => '2016-01-02T12:00:00Z',
+              'amount'    => 409
+            }
+          ]
+        end
+
+        specify 'returns true when server responds with 200' do
+          stub_endpoint.to_return(
+            status: 200,
+            headers: {
+              'Content-Type' => 'application/json'
+            },
+            body: '{}'
+          )
+
+          expect(make_request).to eq(true)
+        end
+
+        def make_request
+          stub_request(:put, 'https://api.geckoboard.com/datasets/sales.gross')
+            .to_return(
+              status: 201,
+              headers: {
+                'Content-Type' => 'application/json'
+              },
+              body: {
+                id: 'sales.gross',
+                fields: fields_hash
+              }.to_json
+            )
+
+          dataset = subject.datasets.find_or_create('sales.gross', fields: fields_hash)
+          dataset.post(data)
+        end
+
+        def stub_endpoint
+          stub_request(:post, 'https://api.geckoboard.com/datasets/sales.gross/data')
+            .with({
+              body: { data: data }.to_json,
+              basic_auth: [api_key, ''],
+              headers: { 'User-Agent' => USER_AGENT }
+            })
+        end
+      end
     end
   end
 end

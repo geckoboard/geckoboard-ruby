@@ -28,6 +28,12 @@ module Geckoboard
       true
     end
 
+    def post_data(dataset_id, data)
+      path = "#{dataset_path(dataset_id)}/data"
+      connection.post(path, { data: data }.to_json)
+      true
+    end
+
     private
 
     def dataset_path(dataset_id)
