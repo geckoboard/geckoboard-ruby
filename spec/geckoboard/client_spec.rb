@@ -293,6 +293,9 @@ module Geckoboard
             }
           ]
         end
+        let(:request_body) do
+          { data: data }
+        end
 
         specify 'returns true when server responds with 200' do
           stub_endpoint.to_return(
@@ -306,7 +309,42 @@ module Geckoboard
           expect(make_request).to eq(true)
         end
 
+        context 'with the optional `delete_by` parameter' do
+          let(:request_body) do
+            { delete_by: 'timestamp', data: data }
+          end
+
+          specify 'makes the appropriate request' do
+            stub_endpoint.to_return(
+              status: 200,
+              headers: {
+                'Content-Type' => 'application/json'
+              },
+              body: '{}'
+            )
+
+            expect(make_request).to eq(true)
+          end
+
+          def make_request
+            make_dataset.post(data, delete_by: 'timestamp')
+          end
+        end
+
         def make_request
+          make_dataset.post(data)
+        end
+
+        def stub_endpoint
+          stub_request(:post, 'https://api.geckoboard.com/datasets/sales.gross/data')
+            .with({
+              body: request_body.to_json,
+              basic_auth: [api_key, ''],
+              headers: { 'User-Agent' => USER_AGENT }
+            })
+        end
+
+        def make_dataset
           stub_request(:put, 'https://api.geckoboard.com/datasets/sales.gross')
             .to_return(
               status: 201,
@@ -319,17 +357,7 @@ module Geckoboard
               }.to_json
             )
 
-          dataset = subject.datasets.find_or_create('sales.gross', fields: fields_hash)
-          dataset.post(data)
-        end
-
-        def stub_endpoint
-          stub_request(:post, 'https://api.geckoboard.com/datasets/sales.gross/data')
-            .with({
-              body: { data: data }.to_json,
-              basic_auth: [api_key, ''],
-              headers: { 'User-Agent' => USER_AGENT }
-            })
+          subject.datasets.find_or_create('sales.gross', fields: fields_hash)
         end
       end
     end

@@ -28,9 +28,10 @@ module Geckoboard
       true
     end
 
-    def post_data(dataset_id, data)
+    def post_data(dataset_id, data, options)
       path = "#{dataset_path(dataset_id)}/data"
-      connection.post(path, { data: data }.to_json)
+      body = options.merge({ data: data }).to_json
+      connection.post(path, body)
       true
     end
 

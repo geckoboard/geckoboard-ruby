@@ -16,8 +16,8 @@ module Geckoboard
       client.put_data(id, payload_formatter.format(data))
     end
 
-    def post(data)
-      client.post_data(id, payload_formatter.format(data))
+    def post(data, options = {})
+      client.post_data(id, payload_formatter.format(data), options)
     end
 
     private
