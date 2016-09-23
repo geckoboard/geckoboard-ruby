@@ -6,9 +6,11 @@ module Geckoboard
       @connection = connection
     end
 
-    def find_or_create(dataset_id, fields: nil)
+    def find_or_create(dataset_id, fields: nil, unique_by: nil)
       path = dataset_path(dataset_id)
-      response = connection.put(path, { fields: hashify_fields(fields) }.to_json)
+      body = { fields: hashify_fields(fields) }
+      body[:unique_by] = unique_by unless unique_by.nil?
+      response = connection.put(path, body.to_json)
 
       data = JSON.parse(response.body)
       Dataset.new(self, data.fetch('id'), data.fetch('fields'))

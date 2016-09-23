@@ -68,21 +68,25 @@ module Geckoboard
 
     describe '#datasets' do
       describe '#find_or_create' do
+        let(:fields_hash) do
+          {
+            amount: {
+              name: 'Amount',
+              type: :number,
+            },
+            timestamp: {
+              name: 'Time',
+              type: :datetime,
+            }
+          }
+        end
+
+        let(:request_body) do
+          { fields: fields_hash }
+        end
+
         context 'with a fields hash' do
           include_examples :bad_response_exceptions
-
-          let(:fields_hash) do
-            {
-              amount: {
-                name: 'Amount',
-                type: :number,
-              },
-              timestamp: {
-                name: 'Time',
-                type: :datetime,
-              }
-            }
-          end
 
           specify 'returns the found or created Dataset object' do
             stub_endpoint.to_return(
@@ -149,10 +153,39 @@ module Geckoboard
           end
         end
 
+        context 'with the optional `unique_by` parameter' do
+          include_examples :bad_response_exceptions
+
+          let(:unique_by) { ['datetime'] }
+          let(:request_body) do
+            { fields: fields_hash, unique_by: unique_by }
+          end
+
+          specify 'returns the found or created Dataset object' do
+            stub_endpoint.to_return(
+              status: 201,
+              headers: {
+                'Content-Type' => 'application/json'
+              },
+              body: {
+                id: 'sales.gross',
+                fields: fields_hash,
+                unique_by: unique_by,
+              }.to_json
+            )
+            dataset = make_request
+            expect(dataset.id).to eq('sales.gross')
+          end
+
+          def make_request
+            subject.datasets.find_or_create('sales.gross', fields: fields_hash, unique_by: unique_by)
+          end
+        end
+
         def stub_endpoint
           stub_request(:put, 'https://api.geckoboard.com/datasets/sales.gross')
             .with({
-              body: { fields: fields_hash }.to_json,
+              body: request_body.to_json,
               basic_auth: [api_key, ''],
               headers: {
                 'User-Agent' => USER_AGENT,
