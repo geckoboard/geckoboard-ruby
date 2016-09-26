@@ -26,6 +26,14 @@ module Geckoboard
       make_request(request)
     end
 
+    def post(path, body)
+      request = Net::HTTP::Post.new(path)
+      request['Content-Type'] = 'application/json'
+      request.body = body
+
+      make_request(request)
+    end
+
     private
 
     def make_request(request)

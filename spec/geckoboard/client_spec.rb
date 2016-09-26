@@ -67,22 +67,26 @@ module Geckoboard
     end
 
     describe '#datasets' do
+      let(:fields_hash) do
+        {
+          amount: {
+            name: 'Amount',
+            type: :number,
+          },
+          timestamp: {
+            name: 'Time',
+            type: :datetime,
+          }
+        }
+      end
+
       describe '#find_or_create' do
+        let(:request_body) do
+          { fields: fields_hash }
+        end
+
         context 'with a fields hash' do
           include_examples :bad_response_exceptions
-
-          let(:fields_hash) do
-            {
-              amount: {
-                name: 'Amount',
-                type: :number,
-              },
-              timestamp: {
-                name: 'Time',
-                type: :datetime,
-              }
-            }
-          end
 
           specify 'returns the found or created Dataset object' do
             stub_endpoint.to_return(
@@ -149,10 +153,39 @@ module Geckoboard
           end
         end
 
+        context 'with the optional `unique_by` parameter' do
+          include_examples :bad_response_exceptions
+
+          let(:unique_by) { ['datetime'] }
+          let(:request_body) do
+            { fields: fields_hash, unique_by: unique_by }
+          end
+
+          specify 'returns the found or created Dataset object' do
+            stub_endpoint.to_return(
+              status: 201,
+              headers: {
+                'Content-Type' => 'application/json'
+              },
+              body: {
+                id: 'sales.gross',
+                fields: fields_hash,
+                unique_by: unique_by,
+              }.to_json
+            )
+            dataset = make_request
+            expect(dataset.id).to eq('sales.gross')
+          end
+
+          def make_request
+            subject.datasets.find_or_create('sales.gross', fields: fields_hash, unique_by: unique_by)
+          end
+        end
+
         def stub_endpoint
           stub_request(:put, 'https://api.geckoboard.com/datasets/sales.gross')
             .with({
-              body: { fields: fields_hash }.to_json,
+              body: request_body.to_json,
               basic_auth: [api_key, ''],
               headers: {
                 'User-Agent' => USER_AGENT,
@@ -193,19 +226,6 @@ module Geckoboard
       describe '#put' do
         include_examples :bad_response_exceptions
 
-        let(:fields) do
-          {
-            amount: {
-              type: :number,
-              name: 'Amount'
-            },
-            timestamp: {
-              type: :datetime,
-              name: 'Time'
-            }
-          }
-        end
-
         let(:data) do
           [
             {
@@ -240,11 +260,11 @@ module Geckoboard
               },
               body: {
                 id: 'sales.gross',
-                fields: fields
+                fields: fields_hash
               }.to_json
             )
 
-          dataset = subject.datasets.find_or_create('sales.gross', fields: fields)
+          dataset = subject.datasets.find_or_create('sales.gross', fields: fields_hash)
           dataset.put(data)
         end
 
@@ -255,6 +275,89 @@ module Geckoboard
               basic_auth: [api_key, ''],
               headers: { 'User-Agent' => USER_AGENT }
             })
+        end
+      end
+
+      describe '#post' do
+        include_examples :bad_response_exceptions
+
+        let(:data) do
+          [
+            {
+              'timestamp' => '2016-01-01T12:00:00Z',
+              'amount'    => 819
+            },
+            {
+              'timestamp' => '2016-01-02T12:00:00Z',
+              'amount'    => 409
+            }
+          ]
+        end
+        let(:request_body) do
+          { data: data }
+        end
+
+        specify 'returns true when server responds with 200' do
+          stub_endpoint.to_return(
+            status: 200,
+            headers: {
+              'Content-Type' => 'application/json'
+            },
+            body: '{}'
+          )
+
+          expect(make_request).to eq(true)
+        end
+
+        context 'with the optional `delete_by` parameter' do
+          let(:request_body) do
+            { delete_by: 'timestamp', data: data }
+          end
+
+          specify 'makes the appropriate request' do
+            stub_endpoint.to_return(
+              status: 200,
+              headers: {
+                'Content-Type' => 'application/json'
+              },
+              body: '{}'
+            )
+
+            expect(make_request).to eq(true)
+          end
+
+          def make_request
+            make_dataset.post(data, delete_by: 'timestamp')
+          end
+        end
+
+        def make_request
+          make_dataset.post(data)
+        end
+
+        def stub_endpoint
+          stub_request(:post, 'https://api.geckoboard.com/datasets/sales.gross/data')
+            .with({
+              body: request_body.to_json,
+              basic_auth: [api_key, ''],
+              headers: { 'User-Agent' => USER_AGENT }
+            })
+        end
+
+        def make_dataset
+          stub_request(:put, 'https://api.geckoboard.com/datasets/sales.gross')
+            .to_return(
+              status: 201,
+              headers: {
+                'Content-Type' => 'application/json'
+              },
+              body: {
+                id: 'sales.gross',
+                fields: fields_hash
+              }.to_json
+            )
+
+          subject.datasets.find_or_create('sales.gross', fields: fields_hash)
         end
       end
     end

@@ -38,7 +38,7 @@ Verify an existing dataset or create a new one.
 dataset = client.datasets.find_or_create('sales.gross', fields: [
   Geckoboard::MoneyField.new(:amount, name: 'Amount', currency: 'USD'),
   Geckoboard::DateTimeField.new(:timestamp, name: 'Time'),
-])
+], unique_by: [:timestamp])
 ```
 
 Available field types:
@@ -49,6 +49,8 @@ Available field types:
 - `PercentageField`
 - `StringField`
 - `MoneyField`
+
+`unique_by` is an optional array of one or more field names whose values will be unique across all your records.
 
 ### Delete
 
@@ -80,6 +82,25 @@ dataset.put([
   },
 ])
 ```
+
+### Post
+
+Append data to a dataset.
+
+```ruby
+dataset.put([
+  {
+    timestamp: DateTime.new(2016, 1, 2, 12, 0, 0),
+    amount: 40900
+  },
+  {
+    timestamp: DateTime.new(2016, 1, 3, 12, 0, 0),
+    amount: 16400
+  },
+], delete_by: :timestamp)
+```
+
+`delete_by` is an optional field by which to order the truncation of records once the maximum record count has been reached. By default the oldest records (by insertion time) will be removed.
 
 ## Development
 
