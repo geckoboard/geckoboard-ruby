@@ -36,7 +36,7 @@ Verify an existing dataset or create a new one.
 
 ```ruby
 dataset = client.datasets.find_or_create('sales.gross', fields: [
-  Geckoboard::MoneyField.new(:amount, name: 'Amount', currency: 'USD'),
+  Geckoboard::MoneyField.new(:amount, name: 'Amount', currency_code: 'USD'),
   Geckoboard::DateTimeField.new(:timestamp, name: 'Time'),
 ], unique_by: [:timestamp])
 ```

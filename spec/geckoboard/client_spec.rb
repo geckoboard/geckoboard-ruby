@@ -124,7 +124,7 @@ module Geckoboard
               cost: {
                 name: 'Cost',
                 type: :money,
-                currency: 'USD',
+                currency_code: 'USD',
               }
             }
           end
@@ -148,7 +148,7 @@ module Geckoboard
             subject.datasets.find_or_create('sales.gross', fields: [
               Geckoboard::NumberField.new(:amount, name: 'Amount'),
               Geckoboard::DateTimeField.new(:timestamp, name: 'Time'),
-              Geckoboard::MoneyField.new(:cost, name: 'Cost', currency: 'USD')
+              Geckoboard::MoneyField.new(:cost, name: 'Cost', currency_code: 'USD')
             ])
           end
         end

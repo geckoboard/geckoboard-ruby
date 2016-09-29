@@ -39,17 +39,17 @@ module Geckoboard
   end
 
   class MoneyField < Field
-    attr_reader :currency
+    attr_reader :currency_code
 
-    def initialize(id, name: nil, currency: nil)
-      raise ArgumentError, "`currency:' is a required argument" if currency.nil?
+    def initialize(id, name: nil, currency_code: nil)
+      raise ArgumentError, "`currency_code:' is a required argument" if currency_code.nil?
 
       super(id, name: name)
-      @currency = currency
+      @currency_code = currency_code
     end
 
     def to_hash
-      super.merge(type: :money, currency: currency)
+      super.merge(type: :money, currency_code: currency_code)
     end
   end
 
