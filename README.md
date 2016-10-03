@@ -88,7 +88,7 @@ dataset.put([
 Append data to a dataset.
 
 ```ruby
-dataset.put([
+dataset.post([
   {
     timestamp: DateTime.new(2016, 1, 2, 12, 0, 0),
     amount: 40900
