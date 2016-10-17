@@ -24,4 +24,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec', '~> 3.4'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'webmock', '~> 2.1'
+  spec.add_runtime.dependency 'rest-client', '~> 2.0.0'
 end
