@@ -14,13 +14,27 @@ module Geckoboard
     end
   end
 
+  class OptionalField < Field
+    attr_reader :optional
+
+    def initialize(id, optional: false, **options)
+      super(id, **options)
+
+      @optional = optional
+    end
+
+    def to_hash
+      super.merge(optional: @optional)
+    end
+  end
+
   class StringField < Field
     def to_hash
       super.merge(type: :string)
     end
   end
 
-  class NumberField < Field
+  class NumberField < OptionalField
     def to_hash
       super.merge(type: :number)
     end
@@ -38,13 +52,13 @@ module Geckoboard
     end
   end
 
-  class MoneyField < Field
+  class MoneyField < OptionalField
     attr_reader :currency_code
 
-    def initialize(id, name: nil, currency_code: nil)
+    def initialize(id, currency_code: nil, **options)
       raise ArgumentError, "`currency_code:' is a required argument" if currency_code.nil?
 
-      super(id, name: name)
+      super(id, **options)
       @currency_code = currency_code
     end
 
@@ -53,7 +67,7 @@ module Geckoboard
     end
   end
 
-  class PercentageField < Field
+  class PercentageField < OptionalField
     def to_hash
       super.merge(type: :percentage)
     end
