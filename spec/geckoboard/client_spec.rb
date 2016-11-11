@@ -71,6 +71,7 @@ module Geckoboard
         {
           amount: {
             name: 'Amount',
+            optional: false,
             type: :number,
           },
           timestamp: {
@@ -115,6 +116,7 @@ module Geckoboard
             {
               amount: {
                 name: 'Amount',
+                optional: false,
                 type: :number,
               },
               timestamp: {
@@ -123,6 +125,7 @@ module Geckoboard
               },
               cost: {
                 name: 'Cost',
+                optional: false,
                 type: :money,
                 currency_code: 'USD',
               }
@@ -179,6 +182,57 @@ module Geckoboard
 
           def make_request
             subject.datasets.find_or_create('sales.gross', fields: fields_hash, unique_by: unique_by)
+          end
+        end
+
+        context 'with optional fields' do
+          let(:fields_hash) do
+            {
+              amount: {
+                name: 'Amount',
+                optional: true,
+                type: :number,
+              },
+              timestamp: {
+                name: 'Time',
+                type: :datetime,
+              },
+              cost: {
+                name: 'Cost',
+                optional: true,
+                type: :money,
+                currency_code: 'USD',
+              },
+              completion: {
+                name: 'Completion',
+                optional: true,
+                type: :percentage,
+              }
+            }
+          end
+
+          specify 'returns the found or created Dataset object' do
+            stub_endpoint.to_return(
+              status: 201,
+              headers: {
+                'Content-Type' => 'application/json'
+              },
+              body: {
+                id: 'sales.gross',
+                fields: fields_hash
+              }.to_json
+            )
+            dataset = make_request
+            expect(dataset.id).to eq('sales.gross')
+          end
+
+          def make_request
+            subject.datasets.find_or_create('sales.gross', fields: [
+              Geckoboard::NumberField.new(:amount, name: 'Amount', optional: true),
+              Geckoboard::DateTimeField.new(:timestamp, name: 'Time'),
+              Geckoboard::MoneyField.new(:cost, name: 'Cost', currency_code: 'USD', optional: true),
+              Geckoboard::PercentageField.new(:completion, name: 'Completion', optional: true)
+            ])
           end
         end
 
