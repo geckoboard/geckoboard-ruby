@@ -21,6 +21,12 @@ Or install it yourself as:
 
 ## Usage
 
+### Require the gem
+
+```ruby
+require 'geckoboard'
+```
+
 ### Ping to authenticate
 
 Verify that your API key is valid and that you can reach the Geckoboard API.
@@ -38,7 +44,7 @@ Verify an existing dataset or create a new one.
 dataset = client.datasets.find_or_create('sales.gross', fields: [
   Geckoboard::MoneyField.new(:cost, name: 'Cost', currency_code: 'USD'),
   Geckoboard::DateTimeField.new(:timestamp, name: 'Time'),
-  Geckoboard::NumberField(:amount, name: 'Amount', optional: true)
+  Geckoboard::NumberField.new(:amount, name: 'Amount', optional: true)
 ], unique_by: [:timestamp])
 ```
 
