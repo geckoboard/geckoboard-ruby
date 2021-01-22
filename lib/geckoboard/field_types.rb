@@ -67,6 +67,21 @@ module Geckoboard
     end
   end
 
+  class DurationField < OptionalField
+    attr_reader :time_unit
+
+    def initialize(id, time_unit: nil, **options)
+      raise ArgumentError, "`time_unit:' is a required argument" if time_unit.nil?
+
+      super(id, **options)
+      @time_unit = time_unit
+    end
+
+    def to_hash
+      super.merge(type: :duration, time_unit: time_unit)
+    end
+  end
+
   class PercentageField < OptionalField
     def to_hash
       super.merge(type: :percentage)

@@ -43,6 +43,7 @@ Verify an existing dataset or create a new one.
 ```ruby
 dataset = client.datasets.find_or_create('sales.gross', fields: [
   Geckoboard::MoneyField.new(:cost, name: 'Cost', currency_code: 'USD'),
+  Geckoboard::DurationField.new(:span, name: 'Span', time_unit: 'seconds', optional: true),
   Geckoboard::DateTimeField.new(:timestamp, name: 'Time'),
   Geckoboard::NumberField.new(:amount, name: 'Amount', optional: true)
 ], unique_by: [:timestamp])
@@ -56,6 +57,7 @@ Available field types:
 - `PercentageField`
 - `StringField`
 - `MoneyField`
+- `DurationField`
 
 `unique_by` is an optional array of one or more field names whose values will be unique across all your records.
 

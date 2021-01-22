@@ -128,6 +128,12 @@ module Geckoboard
                 optional: false,
                 type: :money,
                 currency_code: 'USD',
+              },
+              span: {
+                name: 'Span'
+                optional: false,
+                type: :duration,
+                time_unit: 'seconds',
               }
             }
           end
@@ -152,6 +158,7 @@ module Geckoboard
               Geckoboard::NumberField.new(:amount, name: 'Amount'),
               Geckoboard::DateTimeField.new(:timestamp, name: 'Time'),
               Geckoboard::MoneyField.new(:cost, name: 'Cost', currency_code: 'USD')
+              Geckoboard::DurationField.new(:span, name: 'Span', time_unit: 'seconds')
             ])
           end
         end
@@ -231,6 +238,7 @@ module Geckoboard
               Geckoboard::NumberField.new(:amount, name: 'Amount', optional: true),
               Geckoboard::DateTimeField.new(:timestamp, name: 'Time'),
               Geckoboard::MoneyField.new(:cost, name: 'Cost', currency_code: 'USD', optional: true),
+              Geckoboard::DurationField.new(:span, name: 'Duration', time_unit: 'seconds', optional: true),
               Geckoboard::PercentageField.new(:completion, name: 'Completion', optional: true)
             ])
           end
