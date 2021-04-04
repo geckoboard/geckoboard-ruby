@@ -128,6 +128,22 @@ module Geckoboard
                 optional: false,
                 type: :money,
                 currency_code: 'USD',
+              },
+              span: {
+                name: 'Span'
+                optional: false,
+                type: :duration,
+                time_unit: 'seconds',
+              },
+              completion: {
+                name: 'Completion'
+                optional: false,
+                type: :percentage,
+              },
+              company: {
+                name: 'Company'
+                optional: false,
+                type: :string,
               }
             }
           end
@@ -151,7 +167,10 @@ module Geckoboard
             subject.datasets.find_or_create('sales.gross', fields: [
               Geckoboard::NumberField.new(:amount, name: 'Amount'),
               Geckoboard::DateTimeField.new(:timestamp, name: 'Time'),
-              Geckoboard::MoneyField.new(:cost, name: 'Cost', currency_code: 'USD')
+              Geckoboard::MoneyField.new(:cost, name: 'Cost', currency_code: 'USD'),
+              Geckoboard::DurationField.new(:span, name: 'Span', time_unit: 'seconds'),
+              Geckoboard::PercentageField.new(:completion, name: 'Completion'),
+              Geckoboard::StringField.new(:company, name: 'Company')
             ])
           end
         end
@@ -207,6 +226,11 @@ module Geckoboard
                 name: 'Completion',
                 optional: true,
                 type: :percentage,
+              },
+              company: {
+                name: 'Company',
+                optional: true,
+                type: :string,
               }
             }
           end
@@ -231,7 +255,9 @@ module Geckoboard
               Geckoboard::NumberField.new(:amount, name: 'Amount', optional: true),
               Geckoboard::DateTimeField.new(:timestamp, name: 'Time'),
               Geckoboard::MoneyField.new(:cost, name: 'Cost', currency_code: 'USD', optional: true),
-              Geckoboard::PercentageField.new(:completion, name: 'Completion', optional: true)
+              Geckoboard::DurationField.new(:span, name: 'Duration', time_unit: 'seconds', optional: true),
+              Geckoboard::PercentageField.new(:completion, name: 'Completion', optional: true),
+              Geckoboard::StringField.new(:company, name: 'Company', optional: true)
             ])
           end
         end

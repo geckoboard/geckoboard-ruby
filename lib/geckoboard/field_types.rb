@@ -28,7 +28,7 @@ module Geckoboard
     end
   end
 
-  class StringField < Field
+  class StringField < OptionalField
     def to_hash
       super.merge(type: :string)
     end
@@ -64,6 +64,21 @@ module Geckoboard
 
     def to_hash
       super.merge(type: :money, currency_code: currency_code)
+    end
+  end
+
+  class DurationField < OptionalField
+    attr_reader :time_unit
+
+    def initialize(id, time_unit: nil, **options)
+      raise ArgumentError, "`time_unit:' is a required argument" if time_unit.nil?
+
+      super(id, **options)
+      @time_unit = time_unit
+    end
+
+    def to_hash
+      super.merge(type: :duration, time_unit: time_unit)
     end
   end
 
